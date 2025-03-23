@@ -1,21 +1,27 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'core/di/service_locator.dart';
 import 'core/router/router.dart';
-import 'firebase_options.dart';
+import 'modules/auth/store/auth_store.dart';
 
 void main() async {
   usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    debugPrint("Ошибка инициализации Firebase: $e");
-  }
 
-  runApp(MyApp());
+  await setupLocator();
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthStore>(
+          create: (context) => getIt<AuthStore>()..add(CheckAuthStatusEvent()),
+          lazy: false,
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +37,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routerConfig: router,
-      // home: const SignInPage(title: 'Sign In'),
     );
   }
 }
