@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/core/widgets/custom_scaffold.dart';
+import 'package:flutter_auth/core/widgets/notificator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/widgets/notificator.dart';
 import '../store/auth_store.dart';
 
-class SignInPage extends StatelessWidget {
+class SignUpPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController rePasswordController = TextEditingController();
 
-  SignInPage({super.key});
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      title: 'Sign In',
+      title: 'Sign Up',
       backBtn: '/',
       body: BlocListener<AuthStore, AuthState>(
         listener: (context, state) {
@@ -37,16 +38,21 @@ class SignInPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
               ),
+              TextField(
+                controller: rePasswordController,
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
               ElevatedButton(
                 onPressed: () {
                   context.read<AuthStore>().add(
-                        AuthSignIn(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        ),
+                        AuthSignUp(
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                            rePasswordController.text.trim()),
                       );
                 },
-                child: Text('Sign In'),
+                child: Text('Sign Up'),
               ),
             ],
           ),

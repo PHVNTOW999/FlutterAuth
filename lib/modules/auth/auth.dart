@@ -1,36 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_auth/modules/auth/store/auth_store.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_auth/modules/auth/pages/sign_in_page.dart';
+import 'package:flutter_auth/modules/auth/pages/sign_up_page.dart';
 import 'package:get_it/get_it.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import '../profile/pages/profile_page.dart';
-import 'pages/sign_in_page.dart';
+import 'store/auth_store.dart';
+
 
 class AuthModule {
   static void registerDependencies() {
     final getIt = GetIt.I;
 
-    // Reg Store
-    getIt.registerFactory<AuthStore>(() => AuthStore(getIt<FirebaseAuth>()));
+    // Registering an AuthRepository so GetIt knows how to create instances
+    getIt.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(FirebaseAuth.instance));
+
+    // Register AuthStore as a factory to create a new instance each time
+    getIt.registerFactory<AuthStore>(() => AuthStore(getIt<AuthRepository>()));
   }
 
-  // Route list
-  static GoRoute routes() {
-    return GoRoute(
-      path: '/',
-      builder: (context, state) => ProfilePage(title: 'Profile'),
-      routes: [
-        GoRoute(
-          path: 'sign-in',
-          name: 'sign-in',
-          builder: (context, state) {
-            return BlocProvider(
-              create: (context) => GetIt.instance<AuthStore>(),
-              child: SignInPage(title: 'Sign In'),
-            );
-          },
-        ),
-      ],
-    );
-  }
+  // Module routes
+  static final routes = [
+    GoRoute(
+      path: '/sign-in',
+      name: 'sign-in',
+      builder: (context, state) => SignInPage(),
+    ),
+    GoRoute(
+      path: '/sign-up',
+      name: 'sign-up',
+      builder: (context, state) => SignUpPage(),
+    ),
+  ];
 }
