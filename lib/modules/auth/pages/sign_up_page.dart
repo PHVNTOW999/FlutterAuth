@@ -15,6 +15,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      pageIndex: 3,
       title: 'Sign Up',
       backBtn: '/',
       body: BlocListener<AuthStore, AuthState>(

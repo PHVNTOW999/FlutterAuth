@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/core/widgets/custom_scaffold.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/widgets/loading_screen.dart';
 import '../../auth/store/auth_store.dart';
 
@@ -11,13 +10,12 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      pageIndex: 0,
       title: 'Profile',
       body: BlocBuilder<AuthStore, AuthState>(
         builder: (context, state) {
-          // If User is loading
           if (state is AuthLoading) {
-            return LoadingScreen();
-            //   If User is auth
+            return const LoadingScreen();
           } else if (state is AuthUser) {
             return Center(
               child: ElevatedButton(
@@ -27,26 +25,8 @@ class ProfilePage extends StatelessWidget {
                 child: Text('Exit ${state.user.email}'),
               ),
             );
-            // If User isn't auth
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).go('/sign-in');
-                  },
-                  child: const Text('Go to Sign In'),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).go('/sign-up');
-                  },
-                  child: const Text('Go to Sign Up'),
-                ),
-              ],
-            );
+            return const Center(child: Text('Not authenticated'));
           }
         },
       ),

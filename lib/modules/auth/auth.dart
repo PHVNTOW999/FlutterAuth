@@ -1,3 +1,4 @@
+import 'package:flutter_auth/modules/auth/pages/auth_page.dart';
 import 'package:flutter_auth/modules/auth/pages/sign_in_page.dart';
 import 'package:flutter_auth/modules/auth/pages/sign_up_page.dart';
 import 'package:get_it/get_it.dart';
@@ -29,6 +30,11 @@ class AuthModule {
       path: '/sign-up',
       name: 'sign-up',
       builder: (context, state) => SignUpPage(),
+    ),
+    GoRoute(
+      path: '/auth',
+      name: 'auth',
+      builder: (context, state) => AuthPage(),
     ),
   ];
 }
